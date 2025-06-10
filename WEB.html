@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catálogo de Pendientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style id="estilos-app">
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+        }
+        
+        .tarjeta-pendiente {
+            transition: transform 0.3s ease;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tarjeta-pendiente:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .imagen-pendiente-contenedor {
+            aspect-ratio: 4/3; 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        .imagen-pendiente {
+            object-fit: contain;
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .tarjeta-pendiente:hover .imagen-pendiente {
+            transform: scale(1.1);
+        }
+        
+        .esqueleto-carga {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: carga 1.5s infinite;
+        }
+
+        .esqueleto-carga.h-64 { /* Ajuste para el esqueleto de la imagen */
+            aspect-ratio: 4/3;
+            height: auto; /* Permite que el aspect-ratio tome efecto */
+            min-height: 192px; /* Un valor mínimo para pantallas pequeñas si es necesario */
+        }
+        
+        @keyframes carga {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        .titulo-pendiente {
+            font-weight: 500;
+            color: #333;
+            /* No es recomendable aplicar aspect-ratio directamente aquí. 
+               El padding y la altura del contenedor se encargan de su formato. */
+        }
+        
+        .estado-vacio {
+            min-height: 60vh;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="bg-white shadow-sm">
+        <div class="contenedor mx-auto px-4 py-6">
+            <h1 class="text-3xl font-semibold text-center text-gray-800">Colección de Pendientes</h1>
+            <p class="text-center text-gray-600 mt-2">Diseños exclusivos para todas las ocasiones</p>
+        </div>
+    </header>
+
+    <main class="contenedor mx-auto px-4 py-8">
+        <div id="estado-carga" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <div class="tarjeta-pendiente shadow-md">
+                <div class="esqueleto-carga h-64 md:h-80"></div>
+                <div class="p-4">
+                    <div class="esqueleto-carga h-6 w-3/4 rounded"></div>
+                </div>
+            </div>
+            <div class="tarjeta-pendiente shadow-md">
+                <div class="esqueleto-carga h-64 md:h-80"></div>
+                <div class="p-4">
+                    <div class="esqueleto-carga h-6 w-3/4 rounded"></div>
+                </div>
+            </div>
+            <div class="tarjeta-pendiente shadow-md">
+                <div class="esqueleto-carga h-64 md:h-80"></div>
+                <div class="p-4">
+                    <div class="esqueleto-carga h-6 w-3/4 rounded"></div>
+                </div>
+            </div>
+            <div class="tarjeta-pendiente shadow-md">
+                <div class="esqueleto-carga h-64 md:h-80"></div>
+                <div class="p-4">
+                    <div class="esqueleto-carga h-6 w-3/4 rounded"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="estado-vacio" class="hidden flex flex-col items-center justify-center estado-vacio">
+            <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+            <h3 class="mt-4 text-xl font-medium text-gray-700">No hay pendientes disponibles</h3>
+            <p class="mt-2 text-gray-500 text-center max-w-md">No se encontraron pendientes para mostrar en este momento. Por favor, inténtelo de nuevo más tarde.</p>
+        </div>
+
+        <div id="cuadricula-productos" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            </div>
+    </main>
+
+    <footer class="bg-white mt-12 py-8 border-t border-gray-200">
+        <div class="contenedor mx-auto px-4">
+            <p class="text-center text-gray-600">© 2025 Catálogo de Pendientes. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script id="script-app">
+        // Es aquí donde se pone el nombre dde los pedientes y sus imagenes
+        const pendientes = [
+            {
+                id: 1,
+                nombre: "Pendientes Morados de Flor",
+                imagen: "https://imgur.com/5hnjjAm.jpg" 
+            },
+            {
+                id: 2,
+                nombre: "Aretes Colgantes de Cristal",
+                imagen: "https://cdn.pixabay.com/photo/2018/11/24/02/01/earrings-3834773_1280.jpg"
+            },
+            {
+                id: 3,
+                nombre: "Pendientes Vintage de Perlas",
+                imagen: "https://cdn.pixabay.com/photo/2019/02/14/07/28/earrings-3995831_1280.jpg"
+            },
+            {
+                id: 4,
+                nombre: "Aros Minimalistas Plateados",
+                imagen: "https://cdn.pixabay.com/photo/2017/07/28/14/28/jewelry-2548831_1280.jpg"
+            },
+            {
+                id: 5,
+                nombre: "Pendientes Florales Artesanales",
+                imagen: "https://cdn.pixabay.com/photo/2017/06/28/23/44/ear-rings-2452214_1280.jpg"
+            },
+            {
+                id: 6,
+                nombre: "Aretes Étnico Boho",
+                imagen: "https://cdn.pixabay.com/photo/2020/05/31/09/25/pearls-5241138_1280.jpg"
+            },
+            {
+                id: 7,
+                nombre: "Pendientes 7",
+                imagen: "https://i.imgur.com/c74b3a.jpg"
+            },
+            {
+                id: 8,
+                nombre: "Pendientes 8",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 9,
+                nombre: "Pendientes 9",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 10,
+                nombre: "Pendientes 10",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 11,
+                nombre: "Pendientes 11",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 12,
+                nombre: "Pendientes 12",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 13,
+                nombre: "Pendientes 13",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 14,
+                nombre: "Pendientes 14",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 15,
+                nombre: "Pendientes 15",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 16,
+                nombre: "Pendientes 16",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 17,
+                nombre: "Pendientes 17",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 18,
+                nombre: "Pendientes 18",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 19,
+                nombre: "Pendientes 19",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 20,
+                nombre: "Pendientes 20",
+                imagen: "//: Este es un mensaje de ejemplo."
+            },
+            {
+                id: 21,
+                nombre: "Pendientes 21",
+                imagen: "//: Este es un mensaje de ejemplo."
+            }
+        ];
+
+        // Función para crear tarjeta de producto
+        function crearTarjetaProducto(pendiente) {
+            return `
+                <div class="tarjeta-pendiente shadow-md overflow-hidden">
+                    <div class="imagen-pendiente-contenedor">
+                        <img 
+                            src="${pendiente.imagen}" 
+                            alt="${pendiente.nombre}" 
+                            class="imagen-pendiente"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="p-4">
+                        <h2 class="titulo-pendiente text-lg">${pendiente.nombre}</h2>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para mostrar productos
+        function mostrarProductos() {
+            const cuadriculaProductos = document.getElementById('cuadricula-productos');
+            const estadoCarga = document.getElementById('estado-carga');
+            const estadoVacio = document.getElementById('estado-vacio');
+
+            // Simular retraso de carga
+            setTimeout(() => {
+                estadoCarga.classList.add('hidden');
+                
+                if (pendientes.length === 0) {
+                    estadoVacio.classList.remove('hidden');
+                } else {
+                    cuadriculaProductos.classList.remove('hidden');
+                    
+                    // Crear y añadir tarjetas de productos
+                    const productosHTML = pendientes.map(pendiente => crearTarjetaProducto(pendiente)).join('');
+                    cuadriculaProductos.innerHTML = productosHTML;
+                }
+            }, 1500);
+        }
+
+        // Inicializar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            mostrarProductos();
+        });
+    </script>
+</body>
+</html>
