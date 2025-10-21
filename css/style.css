@@ -20,11 +20,13 @@ body {
 .imagen-pendiente-contenedor {
     /* aspect-ratio: 4/3;  */
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background-color: gray;
+    background-color: lightgray;
+    min-height: 414px;
 }
 
 .imagen-pendiente {
@@ -32,7 +34,6 @@ body {
     width: 100%;
     height: 100%;
     transition: transform 0.5s ease;
-    min-height: 414px;
 }
 
 .tarjeta-pendiente:hover .imagen-pendiente {
