@@ -10,7 +10,6 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    text-align: center;
 }
 
 .tarjeta-pendiente:hover {
