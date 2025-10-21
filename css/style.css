@@ -18,13 +18,14 @@ body {
 }
 
 .imagen-pendiente-contenedor {
-    aspect-ratio: 4/3; 
+    /* aspect-ratio: 4/3;  */
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     background-color: gray;
+    min-height: 414px;
 }
 
 .imagen-pendiente {
